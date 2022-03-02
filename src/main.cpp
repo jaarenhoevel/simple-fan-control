@@ -45,6 +45,8 @@ void setup() {
 
   attachInterrupt(digitalPinToInterrupt(FAN_1_RPM_PIN), fan_1_pulse, FALLING);
   attachInterrupt(digitalPinToInterrupt(FAN_2_RPM_PIN), fan_2_pulse, FALLING);
+
+  delay(2500);
 }
 
 void loop() {
@@ -80,6 +82,11 @@ void calc_rpm(uint64_t ms) {
 void update_temp() {
   sensors.requestTemperatures();
   temperature = sensors.getTempCByIndex(0);
+
+  // Check if sensor reading is valid
+  if (temperature == DEVICE_DISCONNECTED_C) {
+    temperature = END_TEMP;
+  }
 
   Serial.print("\nTEMP: "); Serial.print(temperature);
 }

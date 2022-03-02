@@ -94,7 +94,7 @@ void update_temp() {
 void update_target_rpm() {
   if (temperature <= START_TEMP) target_rpm = MIN_RPM;
   else if (temperature >= END_TEMP) target_rpm = MAX_RPM;
-  else target_rpm = map((long) temperature, START_TEMP, END_TEMP, MIN_RPM, MAX_RPM);
+  else target_rpm = map((long) (temperature * 100), START_TEMP * 100, END_TEMP * 100, MIN_RPM, MAX_RPM);
 
   Serial.print("\nTARGET_RPM: "); Serial.print(target_rpm);
 }

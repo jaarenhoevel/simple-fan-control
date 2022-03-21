@@ -5,7 +5,7 @@
 #define MIN_RPM 42000
 #define MAX_RPM 15000
 
-#define START_TEMP 25
+#define START_TEMP 35
 #define END_TEMP 60
 
 #define UPDATE_INTERVAL 1000 // calc rpm every second

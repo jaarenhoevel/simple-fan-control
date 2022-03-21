@@ -16,7 +16,8 @@
 #define FAN_1_PWM_PIN 5
 #define FAN_2_PWM_PIN 6
 
-#define THERMISTOR_PIN A0
+#define THERMISTOR_PIN         A0
+#define THERMISTOR1_PIN        A1
 #define REFERENCE_RESISTANCE   4700
 #define NOMINAL_RESISTANCE     100000
 #define NOMINAL_TEMPERATURE    25
@@ -24,6 +25,7 @@
 #define ANALOG_RESOLUTION      1023
 
 Thermistor* thermistor;
+Thermistor* thermistor1;
 
 uint32_t fan_rpm[2] = {0, 0};
 uint64_t fan_pulses[2] = {0, 0};
@@ -50,6 +52,15 @@ void setup() {
 
   thermistor = new NTC_Thermistor(
     THERMISTOR_PIN,
+    REFERENCE_RESISTANCE,
+    NOMINAL_RESISTANCE,
+    NOMINAL_TEMPERATURE,
+    B_VALUE,
+    ANALOG_RESOLUTION
+  );
+  
+  thermistor1 = new NTC_Thermistor(
+    THERMISTOR1_PIN,
     REFERENCE_RESISTANCE,
     NOMINAL_RESISTANCE,
     NOMINAL_TEMPERATURE,
@@ -96,7 +107,12 @@ void calc_rpm(uint64_t ms) {
 void update_temp() {
   temperature = thermistor->readCelsius();
 
+  float temperature1 = thermistor1->readCelsius();
+
   Serial.print("\nTEMP: "); Serial.print(temperature);
+  Serial.print("\nTEMP1: "); Serial.print(temperature1);
+
+  if (temperature1 > temperature) temperature = temperature1;
 }
 
 void update_target_rpm() {

@@ -2,13 +2,16 @@
 #include <Thermistor.h>
 #include <NTC_Thermistor.h>
 
-#define MIN_RPM 42000
-#define MAX_RPM 15000
+#define MIN_RPM 15000
+#define MAX_RPM 42000
 
 #define START_TEMP 35
 #define END_TEMP 60
 
 #define UPDATE_INTERVAL 1000 // calc rpm every second
+
+#define TEMP_SAMPLES  32
+#define TEMP_INTERVAL 100
 
 #define FAN_1_RPM_PIN 2
 #define FAN_2_RPM_PIN 3
@@ -105,14 +108,19 @@ void calc_rpm(uint64_t ms) {
 }
 
 void update_temp() {
-  temperature = thermistor->readCelsius();
+  float temp_sum = 0.f;
+  Serial.print("\nSampling ");
 
-  float temperature1 = thermistor1->readCelsius();
+
+  for (uint8_t i = 0; i < TEMP_SAMPLES; i++) {
+    temp_sum += max(thermistor->readCelsius(), thermistor1->readCelsius());
+    delay(TEMP_INTERVAL);
+    Serial.print(".");
+  }
+
+  temperature = temp_sum / (TEMP_SAMPLES * 1.f);
 
   Serial.print("\nTEMP: "); Serial.print(temperature);
-  Serial.print("\nTEMP1: "); Serial.print(temperature1);
-
-  if (temperature1 > temperature) temperature = temperature1;
 }
 
 void update_target_rpm() {

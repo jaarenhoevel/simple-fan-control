@@ -5,8 +5,8 @@
 #define MIN_RPM 15000
 #define MAX_RPM 42000
 
-#define START_TEMP 35
-#define END_TEMP 60
+#define START_TEMP 20
+#define END_TEMP 45
 
 #define UPDATE_INTERVAL 1000 // calc rpm every second
 
@@ -20,15 +20,13 @@
 #define FAN_2_PWM_PIN 6
 
 #define THERMISTOR_PIN         A0
-#define THERMISTOR1_PIN        A1
-#define REFERENCE_RESISTANCE   4700
+#define REFERENCE_RESISTANCE   90000
 #define NOMINAL_RESISTANCE     100000
 #define NOMINAL_TEMPERATURE    25
 #define B_VALUE                3950
 #define ANALOG_RESOLUTION      1023
 
 Thermistor* thermistor;
-Thermistor* thermistor1;
 
 uint32_t fan_rpm[2] = {0, 0};
 uint64_t fan_pulses[2] = {0, 0};
@@ -55,15 +53,6 @@ void setup() {
 
   thermistor = new NTC_Thermistor(
     THERMISTOR_PIN,
-    REFERENCE_RESISTANCE,
-    NOMINAL_RESISTANCE,
-    NOMINAL_TEMPERATURE,
-    B_VALUE,
-    ANALOG_RESOLUTION
-  );
-  
-  thermistor1 = new NTC_Thermistor(
-    THERMISTOR1_PIN,
     REFERENCE_RESISTANCE,
     NOMINAL_RESISTANCE,
     NOMINAL_TEMPERATURE,
@@ -113,7 +102,7 @@ void update_temp() {
 
 
   for (uint8_t i = 0; i < TEMP_SAMPLES; i++) {
-    temp_sum += max(thermistor->readCelsius(), thermistor1->readCelsius());
+    temp_sum += thermistor->readCelsius();
     delay(TEMP_INTERVAL);
     Serial.print(".");
   }

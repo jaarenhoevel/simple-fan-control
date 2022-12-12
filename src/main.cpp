@@ -30,7 +30,7 @@ Thermistor* thermistor;
 
 uint32_t fan_rpm[2] = {0, 0};
 uint64_t fan_pulses[2] = {0, 0};
-uint32_t target_rpm = MIN_RPM;
+uint32_t target_rpm = MAX_RPM;
 
 float temperature = 20.f;
 
@@ -60,8 +60,10 @@ void setup() {
     ANALOG_RESOLUTION
   );
 
-  attachInterrupt(digitalPinToInterrupt(FAN_1_RPM_PIN), fan_1_pulse, FALLING);
-  attachInterrupt(digitalPinToInterrupt(FAN_2_RPM_PIN), fan_2_pulse, FALLING);
+  //attachInterrupt(digitalPinToInterrupt(FAN_1_RPM_PIN), fan_1_pulse, FALLING);
+  //attachInterrupt(digitalPinToInterrupt(FAN_2_RPM_PIN), fan_2_pulse, FALLING);
+
+  set_speed();
 
   delay(1000);
 }
